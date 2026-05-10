@@ -2,21 +2,29 @@ import { Component, inject } from '@angular/core';
 import { AuthStore } from '../../core/auth/auth.store';
 import { NotificationStore } from '../../core/notifications/notification.store';
 import { LayoutService } from '../layout.service';
+import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
+  imports: [BreadcrumbsComponent],
   template: `
     <header class="bg-white border-b border-neutral-200 px-4 h-16 flex items-center justify-between shrink-0">
-      <!-- Hamburguesa -->
-      <button (click)="layout.toggle()"
-              class="p-2 rounded-lg text-neutral-500 hover:bg-neutral-100 hover:text-neutral-700 transition-colors"
-              [attr.aria-label]="layout.collapsed() ? 'Expandir menú' : 'Colapsar menú'">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
+      <!-- Hamburguesa + Breadcrumbs -->
+      <div class="flex items-center gap-3">
+        <button (click)="layout.toggle()"
+                class="p-2 rounded-lg text-neutral-500 hover:bg-neutral-100 hover:text-neutral-700 transition-colors shrink-0"
+                [attr.aria-label]="layout.collapsed() ? 'Expandir menú' : 'Colapsar menú'">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+
+        <div class="hidden sm:block">
+          <app-breadcrumbs />
+        </div>
+      </div>
       <div class="flex items-center gap-4">
         <!-- Notifications -->
         @for (n of notifications.notifications(); track n.id) {

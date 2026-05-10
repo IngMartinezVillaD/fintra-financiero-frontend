@@ -19,7 +19,7 @@ const ROUTE_LABELS: Record<string, string> = {
   standalone: true,
   imports: [RouterLink],
   template: `
-    <nav aria-label="Breadcrumb" class="flex items-center gap-1.5 text-sm text-neutral-500 mb-4">
+    <nav aria-label="Breadcrumb" class="flex items-center gap-1.5 text-sm text-neutral-500">
       @for (crumb of crumbs(); track crumb.label; let last = $last) {
         @if (!last && crumb.path) {
           <a [routerLink]="crumb.path"

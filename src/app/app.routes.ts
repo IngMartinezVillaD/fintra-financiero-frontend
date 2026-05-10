@@ -31,6 +31,10 @@ export const routes: Routes = [
         path: 'configuracion/empresas',
         loadChildren: () => import('./features/configuracion/empresas/feature/empresas.routes').then(m => m.EMPRESAS_ROUTES),
       },
+      {
+        path: 'configuracion/tasas-periodo',
+        loadChildren: () => import('./features/configuracion/tasas-periodo/feature/tasas.routes').then(m => m.TASAS_ROUTES),
+      },
       { path: '', redirectTo: 'health', pathMatch: 'full' },
     ],
   },

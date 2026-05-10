@@ -87,7 +87,8 @@ export class SidebarComponent {
     { label: 'Operaciones',  path: '/prestamos',                icon: 'receipt_long',    roles: ['ADMIN', 'TESORERIA'] },
     { label: 'Aprobaciones', path: '/prestamos/aprobaciones',   icon: 'task_alt',        roles: ['APROBADOR', 'ADMIN'] },
     { label: 'Liquidación',  path: '/prestamos/liquidacion',    icon: 'account_balance', roles: ['TESORERIA', 'ADMIN'] },
-    { label: 'Empresas',     path: '/configuracion/empresas',   icon: 'domain',          roles: ['ADMIN'] },
+    { label: 'Empresas',     path: '/configuracion/empresas',       icon: 'domain',          roles: ['ADMIN'] },
+    { label: 'Tasas',        path: '/configuracion/tasas-periodo', icon: 'percent',         roles: ['ADMIN', 'TESORERIA', 'APROBADOR'] },
     { label: 'Reportes',     path: '/reportes',                 icon: 'bar_chart',       roles: ['ADMIN', 'TESORERIA', 'CONTABILIDAD'] },
   ];
 
