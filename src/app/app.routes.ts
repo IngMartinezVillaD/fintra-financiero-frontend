@@ -28,6 +28,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/prestamos/prestamos.routes').then(m => m.PRESTAMOS_ROUTES),
       },
       {
+        path: 'operaciones',
+        loadChildren: () => import('./features/operaciones/feature/operaciones.routes').then(m => m.OPERACIONES_ROUTES),
+      },
+      {
         path: 'configuracion/empresas',
         loadChildren: () => import('./features/configuracion/empresas/feature/empresas.routes').then(m => m.EMPRESAS_ROUTES),
       },

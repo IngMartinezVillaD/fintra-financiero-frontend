@@ -84,9 +84,10 @@ export class SidebarComponent {
 
   private readonly navItems: NavItem[] = [
     { label: 'Health Check', path: '/health',                   icon: 'monitor_heart',   roles: [] },
-    { label: 'Operaciones',  path: '/prestamos',                icon: 'receipt_long',    roles: ['ADMIN', 'TESORERIA'] },
-    { label: 'Aprobaciones', path: '/prestamos/aprobaciones',   icon: 'task_alt',        roles: ['APROBADOR', 'ADMIN'] },
-    { label: 'Liquidación',  path: '/prestamos/liquidacion',    icon: 'account_balance', roles: ['TESORERIA', 'ADMIN'] },
+    { label: 'Operaciones',  path: '/operaciones',                        icon: 'receipt_long',    roles: ['ADMIN', 'TESORERIA', 'EMPRESA_RECEPTORA'] },
+    { label: 'Aprobaciones', path: '/operaciones/aprobacion-interna',   icon: 'task_alt',        roles: ['APROBADOR', 'ADMIN'] },
+    { label: 'Bandeja AE',   path: '/operaciones/aceptacion-empresa',   icon: 'handshake',       roles: ['EMPRESA_RECEPTORA', 'ADMIN'] },
+    { label: 'Liquidación',  path: '/prestamos/liquidacion',             icon: 'account_balance', roles: ['TESORERIA', 'ADMIN'] },
     { label: 'Empresas',     path: '/configuracion/empresas',       icon: 'domain',          roles: ['ADMIN'] },
     { label: 'Tasas',        path: '/configuracion/tasas-periodo', icon: 'percent',         roles: ['ADMIN', 'TESORERIA', 'APROBADOR'] },
     { label: 'Reportes',     path: '/reportes',                 icon: 'bar_chart',       roles: ['ADMIN', 'TESORERIA', 'CONTABILIDAD'] },
