@@ -7,6 +7,14 @@ export const routes: Routes = [
     loadComponent: () => import('./core/auth/login.page').then(m => m.LoginPage),
   },
   {
+    path: 'forbidden',
+    loadComponent: () => import('./features/forbidden/forbidden.page').then(m => m.ForbiddenPage),
+  },
+  {
+    path: 'error',
+    loadComponent: () => import('./features/error/error.page').then(m => m.ErrorPage),
+  },
+  {
     path: '',
     canActivate: [authGuard],
     loadComponent: () => import('./layout/shell/shell.page').then(m => m.ShellPage),
@@ -18,6 +26,10 @@ export const routes: Routes = [
       {
         path: 'prestamos',
         loadChildren: () => import('./features/prestamos/prestamos.routes').then(m => m.PRESTAMOS_ROUTES),
+      },
+      {
+        path: 'configuracion/empresas',
+        loadChildren: () => import('./features/configuracion/empresas/feature/empresas.routes').then(m => m.EMPRESAS_ROUTES),
       },
       { path: '', redirectTo: 'health', pathMatch: 'full' },
     ],

@@ -7,7 +7,7 @@ import { LayoutService } from '../layout.service';
   selector: 'app-navbar',
   standalone: true,
   template: `
-    <header class="bg-white border-b border-neutral-200 px-4 py-3 flex items-center justify-between">
+    <header class="bg-white border-b border-neutral-200 px-4 h-16 flex items-center justify-between shrink-0">
       <!-- Hamburguesa -->
       <button (click)="layout.toggle()"
               class="p-2 rounded-lg text-neutral-500 hover:bg-neutral-100 hover:text-neutral-700 transition-colors"
