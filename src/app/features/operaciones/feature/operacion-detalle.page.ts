@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OperacionesStore } from '../data-access/operaciones.store';
 import { OperacionesService } from '../data-access/operaciones.service';
+import { FirmaService, FirmaEstado, FIRMA_ESTADO_LABEL } from '../data-access/firma.service';
 import { HasRoleDirective } from '@shared/directives/has-role.directive';
 import { BadgeComponent, BadgeSeverity } from '@shared/ui/badge/badge.component';
 import { ButtonComponent } from '@shared/ui/button/button.component';
@@ -126,6 +127,55 @@ import { EstadoPipeline } from '../domain/operacion.model';
           </div>
         </div>
 
+        <!-- Firma Digital -->
+        @if (['FD','DS'].includes(op.estadoPipeline)) {
+          <div class="card space-y-3">
+            <h2 class="text-base font-semibold text-neutral-800 border-b pb-2 flex items-center gap-2">
+              <span class="material-symbols-outlined text-base text-brand-primary">draw</span>
+              Firma Digital
+            </h2>
+            @if (firma()) {
+              <dl class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <dt class="text-neutral-500">Estado</dt>
+                  <dd>
+                    <app-badge [label]="firmaLabel()" [severity]="firmaSeverity()"/>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-neutral-500">Destinatario</dt>
+                  <dd class="font-medium">{{ firma()!.destinatarioEmail }}</dd>
+                </div>
+                <div>
+                  <dt class="text-neutral-500">Enviado</dt>
+                  <dd class="text-neutral-600">{{ firma()!.enviadoAt?.slice(0,16)?.replace('T',' ') ?? '—' }}</dd>
+                </div>
+                <div>
+                  <dt class="text-neutral-500">Firmado</dt>
+                  <dd class="text-neutral-600">{{ firma()!.firmadoAt?.slice(0,16)?.replace('T',' ') ?? '—' }}</dd>
+                </div>
+              </dl>
+              @if (['ENVIADA','EXPIRADA'].includes(firma()!.estado)) {
+                <div *hasRole="['ADMIN','TESORERIA']">
+                  <app-button variant="secondary" [loading]="firmaLoading()"
+                              (clicked)="reenviarFirma(op.id)">
+                    <span class="material-symbols-outlined text-sm mr-1">send</span>
+                    Reenviar link de firma
+                  </app-button>
+                </div>
+              }
+            } @else if (op.estadoPipeline === 'FD') {
+              <div class="flex items-center gap-3">
+                <p class="text-sm text-neutral-500">Firma aún no iniciada.</p>
+                <app-button variant="secondary" [loading]="firmaLoading()"
+                            (clicked)="iniciarFirma(op.id)" *hasRole="['ADMIN','TESORERIA']">
+                  Iniciar firma
+                </app-button>
+              </div>
+            }
+          </div>
+        }
+
         <!-- Aviso tramo anterior -->
         @if (op.avisoTramoAnterior) {
           <div class="bg-warning-light border border-warning rounded-lg p-4 space-y-1">
@@ -193,15 +243,56 @@ import { EstadoPipeline } from '../domain/operacion.model';
 export class OperacionDetallePage implements OnInit {
   protected readonly store  = inject(OperacionesStore);
   private readonly svc      = inject(OperacionesService);
+  private readonly firmaSvc = inject(FirmaService);
   private readonly route    = inject(ActivatedRoute);
   protected readonly router = inject(Router);
 
-  protected procesando     = signal(false);
+  protected procesando      = signal(false);
   protected confirmCancelar = signal(false);
+  protected firma           = signal<FirmaEstado | null>(null);
+  protected firmaLoading    = signal(false);
+  private operacionId!: number;
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.store.cargarDetalle(id);
+    this.operacionId = Number(this.route.snapshot.paramMap.get('id'));
+    this.store.cargarDetalle(this.operacionId);
+    this.cargarFirma();
+  }
+
+  private cargarFirma(): void {
+    this.firmaSvc.consultarEstado(this.operacionId).subscribe({
+      next: f => this.firma.set(f),
+      error: () => {},
+    });
+  }
+
+  protected iniciarFirma(id: number): void {
+    this.firmaLoading.set(true);
+    this.firmaSvc.iniciar(id).subscribe({
+      next: f  => { this.firma.set(f); this.firmaLoading.set(false); },
+      error: () => this.firmaLoading.set(false),
+    });
+  }
+
+  protected reenviarFirma(id: number): void {
+    this.firmaLoading.set(true);
+    this.firmaSvc.reenviar(id).subscribe({
+      next: f  => { this.firma.set(f); this.firmaLoading.set(false); },
+      error: () => this.firmaLoading.set(false),
+    });
+  }
+
+  protected firmaLabel(): string {
+    const estado = this.firma()?.estado;
+    return estado ? (FIRMA_ESTADO_LABEL[estado] ?? estado) : '';
+  }
+
+  protected firmaSeverity(): BadgeSeverity {
+    const m: Record<string, BadgeSeverity> = {
+      ENVIADA: 'warning', FIRMADA: 'success',
+      RECHAZADA: 'danger', EXPIRADA: 'danger',
+    };
+    return m[this.firma()?.estado ?? ''] ?? 'pending';
   }
 
   protected estadoSeverity(estado: EstadoPipeline): BadgeSeverity {
