@@ -8,7 +8,6 @@ import { ButtonComponent } from '@shared/ui/button/button.component';
 import { PipelineStepperComponent, PipelineStep } from '@shared/ui/stepper/stepper.component';
 import { ConfirmDialogComponent } from '@shared/ui/confirm-dialog/confirm-dialog.component';
 import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
-import { DateLongPipe } from '@core/i18n/pipes/date-long.pipe';
 import { EstadoPipeline } from '../domain/operacion.model';
 
 @Component({
@@ -16,7 +15,7 @@ import { EstadoPipeline } from '../domain/operacion.model';
   standalone: true,
   imports: [
     HasRoleDirective, BadgeComponent, ButtonComponent,
-    PipelineStepperComponent, ConfirmDialogComponent, CurrencyCopPipe, DateLongPipe,
+    PipelineStepperComponent, ConfirmDialogComponent, CurrencyCopPipe,
   ],
   template: `
     <div class="space-y-6">

@@ -23,7 +23,7 @@ export interface EventoPipeline {
 
 export interface OperacionListItem {
   id: number;
-  referencia: string;
+  referencia: string | null;
   empresaPrestamistaNombre: string;
   empresaPrestatariaNombre: string;
   cobraInteres: CobraInteres;

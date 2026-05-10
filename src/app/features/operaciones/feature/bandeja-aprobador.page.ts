@@ -1,8 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { OperacionesService } from '../data-access/operaciones.service';
-import { BadgeComponent, BadgeSeverity } from '@shared/ui/badge/badge.component';
-import { ButtonComponent } from '@shared/ui/button/button.component';
 import { DrawerComponent } from '@shared/ui/drawer/drawer.component';
 import { ConfirmDialogComponent } from '@shared/ui/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
@@ -15,8 +13,7 @@ type Accion = 'aprobar' | 'devolver' | 'rechazar' | null;
   selector: 'app-bandeja-aprobador',
   standalone: true,
   imports: [
-    FormsModule, BadgeComponent, ButtonComponent,
-    DrawerComponent, ConfirmDialogComponent, EmptyStateComponent, CurrencyCopPipe,
+    FormsModule, DrawerComponent, ConfirmDialogComponent, EmptyStateComponent, CurrencyCopPipe,
   ],
   template: `
     <div class="space-y-4">

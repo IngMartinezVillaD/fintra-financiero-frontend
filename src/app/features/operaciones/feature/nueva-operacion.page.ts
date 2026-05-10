@@ -10,13 +10,12 @@ import { getErrorMessage, markAllAsTouched } from '@shared/utils/form.utils';
 import { AvisoTramoAnterior, CobraInteres } from '../domain/operacion.model';
 import { EmpresaListItem, CuentaBancaria } from '../../configuracion/empresas/domain/empresa.model';
 import { TasaPeriodo } from '../../configuracion/tasas-periodo/domain/tasa-periodo.model';
-import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
 import { MoneyInputComponent } from '@shared/ui/money-input/money-input.component';
 
 @Component({
   selector: 'app-nueva-operacion',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent, FormFieldComponent, CurrencyCopPipe, MoneyInputComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, FormFieldComponent, MoneyInputComponent],
   template: `
     <div class="max-w-3xl mx-auto space-y-6">
       <!-- Header -->

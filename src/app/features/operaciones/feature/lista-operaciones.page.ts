@@ -6,8 +6,6 @@ import { OperacionesService } from '../data-access/operaciones.service';
 import { HasRoleDirective } from '@shared/directives/has-role.directive';
 import { BadgeComponent, BadgeSeverity } from '@shared/ui/badge/badge.component';
 import { ButtonComponent } from '@shared/ui/button/button.component';
-import { PipelineStepperComponent } from '@shared/ui/stepper/stepper.component';
-import { ConfirmDialogComponent } from '@shared/ui/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
 import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
 import { EstadoPipeline, OperacionListItem } from '../domain/operacion.model';
@@ -17,7 +15,7 @@ import { EstadoPipeline, OperacionListItem } from '../domain/operacion.model';
   standalone: true,
   imports: [
     FormsModule, HasRoleDirective, BadgeComponent, ButtonComponent,
-    PipelineStepperComponent, ConfirmDialogComponent, EmptyStateComponent, CurrencyCopPipe,
+    EmptyStateComponent, CurrencyCopPipe,
   ],
   template: `
     <div class="space-y-4">
