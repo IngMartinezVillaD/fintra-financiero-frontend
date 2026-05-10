@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-brand-primary: #1B4F9B;
+    --color-brand-secondary: #0F3672;
+    --color-brand-accent: #2D7DD2;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    @apply text-neutral-800;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-primary text-white px-4 py-2 rounded-lg font-medium
+           hover:bg-brand-secondary transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply border border-brand-primary text-brand-primary px-4 py-2 rounded-lg font-medium
+           hover:bg-brand-light transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2;
+  }
+
+  .form-input {
+    @apply block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm
+           placeholder-neutral-400 shadow-sm
+           focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-fintra border border-neutral-100 p-6;
+  }
+
+  .badge-pending  { @apply bg-neutral-100 text-neutral-700 text-xs font-medium px-2.5 py-0.5 rounded-full; }
+  .badge-active   { @apply bg-brand-light text-brand-primary text-xs font-medium px-2.5 py-0.5 rounded-full; }
+  .badge-success  { @apply bg-success-light text-success text-xs font-medium px-2.5 py-0.5 rounded-full; }
+  .badge-warning  { @apply bg-warning-light text-warning text-xs font-medium px-2.5 py-0.5 rounded-full; }
+  .badge-danger   { @apply bg-danger-light text-danger text-xs font-medium px-2.5 py-0.5 rounded-full; }
+}

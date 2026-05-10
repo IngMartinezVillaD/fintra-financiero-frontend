@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.angular/
+.pnpm-store/
+*.log
+.env
+.env.local
+coverage/
+e2e/results/
