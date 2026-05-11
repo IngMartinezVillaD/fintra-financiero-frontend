@@ -46,6 +46,7 @@ export interface Operacion {
   cobraInteres: CobraInteres;
   cuentaOrigenId: number | null;
   cuentaOrigenDescripcion: string | null;
+  cuentaOrigenExentaGmf: boolean | null;
   cuentaDestinoId: number | null;
   cuentaDestinoDescripcion: string | null;
   montoEstimado: string | null;

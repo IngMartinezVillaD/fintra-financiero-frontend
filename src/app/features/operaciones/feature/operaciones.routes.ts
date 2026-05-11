@@ -18,6 +18,11 @@ export const OPERACIONES_ROUTES: Routes = [
     loadComponent: () => import('./bandeja-empresa.page').then(m => m.BandejaEmpresaPage),
   },
   {
+    path: 'desembolsos',
+    loadChildren: () =>
+      import('../desembolso/feature/desembolso.routes').then(m => m.DESEMBOLSO_ROUTES),
+  },
+  {
     path: ':id',
     loadComponent: () => import('./operacion-detalle.page').then(m => m.OperacionDetallePage),
   },
