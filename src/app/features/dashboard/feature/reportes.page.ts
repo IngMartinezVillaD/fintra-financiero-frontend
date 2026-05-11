@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from '@env/environment';
 import { ButtonComponent } from '@shared/ui/button/button.component';
+import { HttpClient } from '@angular/common/http';
 
 interface Reporte {
   id: string;
@@ -21,6 +22,13 @@ interface Reporte {
         <h1 class="text-xl font-bold text-neutral-900">Reportes</h1>
         <p class="text-sm text-neutral-500 mt-0.5">Exportación Excel de información financiera</p>
       </div>
+
+      @if (error()) {
+        <div class="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 flex items-center gap-2">
+          <span class="material-symbols-outlined text-base">error</span>
+          {{ error() }}
+        </div>
+      }
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @for (rep of reportes; track rep.id) {
@@ -44,7 +52,7 @@ interface Reporte {
                   }
                   @if (param.type === 'year') {
                     <input type="number" [(ngModel)]="paramValues[rep.id + '_' + param.key]"
-                           [value]="currentYear" min="2020" max="2099"
+                           [placeholder]="currentYear" min="2020" max="2099"
                            class="w-full rounded border border-neutral-300 px-3 py-1.5 text-sm
                                   focus:outline-none focus:ring-2 focus:ring-brand-primary/30"/>
                   }
@@ -52,9 +60,14 @@ interface Reporte {
               }
             </div>
 
-            <app-button (clicked)="descargar(rep)">
-              <span class="material-symbols-outlined text-sm mr-1">download</span>
-              Generar Excel
+            <app-button (clicked)="descargar(rep)" [disabled]="descargando() === rep.id">
+              @if (descargando() === rep.id) {
+                <span class="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-1"></span>
+                Generando...
+              } @else {
+                <span class="material-symbols-outlined text-sm mr-1">download</span>
+                Generar Excel
+              }
             </app-button>
           </div>
         }
@@ -63,9 +76,12 @@ interface Reporte {
   `,
 })
 export class ReportesPage {
+  private readonly http = inject(HttpClient);
+
   paramValues: Record<string, string> = {};
   currentYear = new Date().getFullYear().toString();
-  downloading = signal(false);
+  descargando = signal<string | null>(null);
+  error = signal<string | null>(null);
 
   private readonly apiBase = `${environment.apiBaseUrl}/reportes`;
 
@@ -111,35 +127,80 @@ export class ReportesPage {
   ];
 
   descargar(rep: Reporte) {
+    if (this.descargando()) return;
+    this.error.set(null);
+
     const p = this.paramValues;
+    const hoy = new Date().toISOString().split('T')[0];
     let url = '';
+    let filename = '';
 
     switch (rep.id) {
-      case 'saldos':
-        url = `${this.apiBase}/saldos?fecha=${p['saldos_fecha'] || new Date().toISOString().split('T')[0]}`;
-        break;
-      case 'liquidacion':
-        url = `${this.apiBase}/liquidacion-anual/${p['liquidacion_anio'] || this.currentYear}`;
-        break;
-      case 'auditoria': {
-        const hoy = new Date().toISOString().split('T')[0];
-        const hace90 = new Date(Date.now() - 90 * 86400000).toISOString().split('T')[0];
-        url = `${this.apiBase}/auditoria-pipeline?desde=${p['auditoria_desde'] || hace90}&hasta=${p['auditoria_hasta'] || hoy}`;
+      case 'saldos': {
+        const fecha = p['saldos_fecha'] || hoy;
+        url = `${this.apiBase}/saldos?fecha=${fecha}`;
+        filename = `saldos-${fecha}.xlsx`;
         break;
       }
-      case 'gmf':
-        url = `${this.apiBase}/gmf/${p['gmf_anio'] || this.currentYear}`;
+      case 'liquidacion': {
+        const anio = p['liquidacion_anio'] || this.currentYear;
+        url = `${this.apiBase}/liquidacion-anual/${anio}`;
+        filename = `liquidacion-${anio}.xlsx`;
         break;
-      case 'presunto':
-        url = `${this.apiBase}/presunto/${p['presunto_anio'] || this.currentYear}`;
+      }
+      case 'auditoria': {
+        const hace90 = new Date(Date.now() - 90 * 86400000).toISOString().split('T')[0];
+        const desde = p['auditoria_desde'] || hace90;
+        const hasta = p['auditoria_hasta'] || hoy;
+        url = `${this.apiBase}/auditoria-pipeline?desde=${desde}&hasta=${hasta}`;
+        filename = `auditoria-${desde}-${hasta}.xlsx`;
         break;
+      }
+      case 'gmf': {
+        const anio = p['gmf_anio'] || this.currentYear;
+        url = `${this.apiBase}/gmf/${anio}`;
+        filename = `gmf-${anio}.xlsx`;
+        break;
+      }
+      case 'presunto': {
+        const anio = p['presunto_anio'] || this.currentYear;
+        url = `${this.apiBase}/presunto/${anio}`;
+        filename = `presunto-dian-${anio}.xlsx`;
+        break;
+      }
     }
 
-    if (url) {
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = '';
-      a.click();
+    if (!url) return;
+
+    const token = sessionStorage.getItem('accessToken');
+    if (!token) {
+      this.error.set('Sesión expirada. Por favor inicia sesión nuevamente.');
+      return;
     }
+
+    this.descargando.set(rep.id);
+
+    this.http.get(url, {
+      responseType: 'blob',
+      headers: { Authorization: `Bearer ${token}` },
+    }).subscribe({
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+        this.descargando.set(null);
+      },
+      error: (err) => {
+        this.descargando.set(null);
+        if (err.status === 403 || err.status === 401) {
+          this.error.set('No tienes permisos para descargar este reporte.');
+        } else {
+          this.error.set('Error al generar el reporte. Inténtalo de nuevo.');
+        }
+      },
+    });
   }
 }
