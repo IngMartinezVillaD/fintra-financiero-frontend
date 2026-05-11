@@ -1,12 +1,11 @@
 import { Component, input } from '@angular/core';
 import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
-import { PercentageEaPipe } from '@shared/pipes/percentage-ea.pipe';
 import { Tramo, TIPO_MOVIMIENTO_LABEL } from '../domain/seguimiento.model';
 
 @Component({
   selector: 'app-tramos-tabla',
   standalone: true,
-  imports: [CurrencyCopPipe, PercentageEaPipe],
+  imports: [CurrencyCopPipe],
   template: `
     <div class="card p-0 overflow-hidden">
       <div class="px-4 py-3 border-b border-neutral-200 bg-neutral-50">
