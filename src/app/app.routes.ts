@@ -43,8 +43,8 @@ export const routes: Routes = [
       },
       {
         path: 'reportes',
-        loadChildren: () =>
-          import('./features/dashboard/feature/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
+        loadComponent: () =>
+          import('./features/dashboard/feature/reportes.page').then(m => m.ReportesPage),
       },
       {
         path: 'integraciones',
@@ -64,7 +64,7 @@ export const routes: Routes = [
         path: 'configuracion/tasas-periodo',
         loadChildren: () => import('./features/configuracion/tasas-periodo/feature/tasas.routes').then(m => m.TASAS_ROUTES),
       },
-      { path: '', redirectTo: 'health', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: '' },

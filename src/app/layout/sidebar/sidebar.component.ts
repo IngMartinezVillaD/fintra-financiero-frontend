@@ -8,6 +8,7 @@ interface NavItem {
   path: string;
   icon: string;
   roles: string[];
+  section?: string;  // label de sección (encabezado visual)
 }
 
 @Component({
@@ -34,6 +35,11 @@ interface NavItem {
       <nav class="flex-1 py-4 space-y-0.5 overflow-y-auto"
            [class]="layout.collapsed() ? 'px-2' : 'px-3'">
         @for (item of visibleItems(); track item.path) {
+          @if (item.section && !layout.collapsed()) {
+            <p class="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-widest text-neutral-500">
+              {{ item.section }}
+            </p>
+          }
           <a [routerLink]="item.path"
              routerLinkActive="bg-brand-primary/20 text-white border-l-2 border-brand-accent"
              [routerLinkActiveOptions]="{ exact: false }"
@@ -83,14 +89,20 @@ export class SidebarComponent {
   protected readonly layout   = inject(LayoutService);
 
   private readonly navItems: NavItem[] = [
-    { label: 'Health Check', path: '/health',                   icon: 'monitor_heart',   roles: [] },
-    { label: 'Operaciones',  path: '/operaciones',                        icon: 'receipt_long',    roles: ['ADMIN', 'TESORERIA', 'EMPRESA_RECEPTORA'] },
-    { label: 'Aprobaciones', path: '/operaciones/aprobacion-interna',   icon: 'task_alt',        roles: ['APROBADOR', 'ADMIN'] },
-    { label: 'Bandeja AE',   path: '/operaciones/aceptacion-empresa',   icon: 'handshake',       roles: ['EMPRESA_RECEPTORA', 'ADMIN'] },
-    { label: 'Liquidación',  path: '/prestamos/liquidacion',             icon: 'account_balance', roles: ['TESORERIA', 'ADMIN'] },
-    { label: 'Empresas',     path: '/configuracion/empresas',       icon: 'domain',          roles: ['ADMIN'] },
-    { label: 'Tasas',        path: '/configuracion/tasas-periodo', icon: 'percent',         roles: ['ADMIN', 'TESORERIA', 'APROBADOR'] },
-    { label: 'Reportes',     path: '/reportes',                 icon: 'bar_chart',       roles: ['ADMIN', 'TESORERIA', 'CONTABILIDAD'] },
+    { label: 'Dashboard',           path: '/dashboard',                      icon: 'dashboard',         roles: ['ADMIN','TESORERIA','APROBADOR','CONTABILIDAD','CONSULTA'], section: 'Módulo 9' },
+    { label: 'Operaciones',         path: '/operaciones',                    icon: 'receipt_long',      roles: ['ADMIN','TESORERIA','EMPRESA_RECEPTORA'] },
+    { label: 'Nueva operación',     path: '/operaciones/nueva',              icon: 'add_circle',        roles: ['ADMIN','TESORERIA'] },
+    { label: 'Pend. aprobación',    path: '/operaciones/aprobacion-interna', icon: 'task_alt',          roles: ['APROBADOR','ADMIN'] },
+    { label: 'Bandeja empresa',     path: '/operaciones/aceptacion-empresa', icon: 'handshake',         roles: ['EMPRESA_RECEPTORA','ADMIN'] },
+    { label: 'Desembolsos',         path: '/operaciones/desembolsos',        icon: 'payments',          roles: ['ADMIN','TESORERIA'] },
+    { label: 'Seguimiento',         path: '/operaciones/seguimiento',        icon: 'monitoring',        roles: ['ADMIN','TESORERIA','APROBADOR','CONTABILIDAD','CONSULTA'] },
+    { label: 'Liquidación mensual', path: '/liquidaciones-mensuales',        section: 'Gestión',        icon: 'account_balance',   roles: ['ADMIN','TESORERIA','APROBADOR','CONTABILIDAD'] },
+    { label: 'Control GMF',         path: '/controles/gmf',                  icon: 'receipt',           roles: ['ADMIN','TESORERIA','CONTABILIDAD'] },
+    { label: 'Interés presunto',    path: '/controles/presunto',             icon: 'gavel',             roles: ['ADMIN','TESORERIA','CONTABILIDAD'] },
+    { label: 'Reportes',            path: '/dashboard/reportes',             section: 'Config.',             icon: 'bar_chart',         roles: ['ADMIN','TESORERIA','CONTABILIDAD'] },
+    { label: 'Empresas',            path: '/configuracion/empresas',         icon: 'domain',            roles: ['ADMIN'] },
+    { label: 'Tasas',               path: '/configuracion/tasas-periodo',    icon: 'percent',           roles: ['ADMIN','TESORERIA','APROBADOR'] },
+    { label: 'Integraciones',       path: '/integraciones/estado',           icon: 'settings_ethernet', roles: ['ADMIN'] },
   ];
 
   protected visibleItems() {
