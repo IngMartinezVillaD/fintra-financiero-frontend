@@ -23,7 +23,7 @@ import { EstadoPipeline, OperacionListItem } from '../domain/operacion.model';
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-xl font-bold text-neutral-900">Operaciones</h1>
-          <p class="text-sm text-neutral-500 mt-0.5">Préstamos intercompañía en pipeline</p>
+          <p class="text-sm text-neutral-500 mt-0.5">Préstamos intercompañía en cartera</p>
         </div>
         <app-button *hasRole="['ADMIN','TESORERIA']" (clicked)="irACrear()">
           <span class="material-symbols-outlined text-sm mr-1">add</span>
@@ -55,7 +55,7 @@ import { EstadoPipeline, OperacionListItem } from '../domain/operacion.model';
                 <th class="px-4 py-3 text-left font-medium text-neutral-600">Prestataria</th>
                 <th class="px-4 py-3 text-right font-medium text-neutral-600">Monto Est.</th>
                 <th class="px-4 py-3 text-left font-medium text-neutral-600">Interés</th>
-                <th class="px-4 py-3 text-center font-medium text-neutral-600">Pipeline</th>
+                <th class="px-4 py-3 text-center font-medium text-neutral-600">Estado</th>
                 <th class="px-4 py-3 text-left font-medium text-neutral-600">Creado</th>
                 <th class="px-4 py-3 w-20 text-center font-medium text-neutral-600">Acciones</th>
               </tr>

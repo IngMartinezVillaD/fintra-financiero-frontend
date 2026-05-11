@@ -14,7 +14,7 @@ const STEPS = [
   selector: 'app-pipeline-stepper',
   standalone: true,
   template: `
-    <div class="flex items-start gap-0" role="list" aria-label="Pipeline de operación">
+    <div class="flex items-start gap-0" role="list" aria-label="Etapas de la operación">
       @for (step of steps; track step.key; let last = $last) {
         <div class="flex items-center" role="listitem">
           <div class="flex flex-col items-center">

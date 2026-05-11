@@ -93,8 +93,8 @@ import { DashboardData, EvolucionMensual, KpiGerencial } from '../domain/dashboa
               <p class="text-xs text-neutral-400">Estado DS</p>
             </div>
             <div class="card p-4 text-center">
-              <p class="text-xs text-neutral-500 mb-1">En pipeline</p>
-              <p class="text-2xl font-bold text-blue-700">{{ kpis()!.operacionesEnPipeline }}</p>
+              <p class="text-xs text-neutral-500 mb-1">En trámite</p>
+              <p class="text-2xl font-bold text-blue-700">{{ kpis()!.operacionesEnTramite }}</p>
               <p class="text-xs text-neutral-400">CR a FD</p>
             </div>
             <div class="card p-4 text-center">

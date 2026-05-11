@@ -193,7 +193,7 @@ import { EstadoPipeline } from '../domain/operacion.model';
 
         <!-- Historial de eventos -->
         <div class="card space-y-3">
-          <h2 class="text-base font-semibold text-neutral-800 border-b pb-2">Historial del pipeline</h2>
+          <h2 class="text-base font-semibold text-neutral-800 border-b pb-2">Historial de la operación</h2>
           @if (op.eventos.length === 0) {
             <p class="text-sm text-neutral-400">Sin eventos registrados</p>
           } @else {

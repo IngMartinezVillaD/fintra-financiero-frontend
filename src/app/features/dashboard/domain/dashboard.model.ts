@@ -55,7 +55,7 @@ export interface KpiGerencial {
   diasPromedioAprobacion: number;
   operacionesRechazadas: number;
   operacionesActivas: number;
-  operacionesEnPipeline: number;
+  operacionesEnTramite: number;
   tasaPromedioPonderada: string;
 }
 
