@@ -1,18 +1,19 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { DashboardService } from '../data-access/dashboard.service';
 import { PipelineStepperLargeComponent } from '../ui/pipeline-stepper-large.component';
 import { ConsolidadoCardsComponent } from '../ui/consolidado-cards.component';
 import { AlertasListComponent } from '../ui/alertas-list.component';
 import { EvolucionChartComponent } from '../ui/evolucion-chart.component';
-import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
 import { DashboardData, EvolucionMensual, KpiGerencial } from '../domain/dashboard.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
+    DecimalPipe,
     PipelineStepperLargeComponent, ConsolidadoCardsComponent,
-    AlertasListComponent, EvolucionChartComponent, CurrencyCopPipe,
+    AlertasListComponent, EvolucionChartComponent,
   ],
   template: `
     <div class="space-y-5">

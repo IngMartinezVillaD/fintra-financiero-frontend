@@ -12,7 +12,7 @@ import { PipelineConteo, PIPELINE_ETAPAS } from '../domain/dashboard.model';
           <div class="flex flex-col items-center gap-2">
             <div class="rounded-xl px-3 py-3 text-center w-full transition-all"
                  [class]="etapa.color">
-              <p class="text-2xl font-bold">{{ conteo()[etapa.key] ?? 0 }}</p>
+              <p class="text-2xl font-bold">{{ conteo()[$any(etapa.key)] ?? 0 }}</p>
               <p class="text-xs font-medium mt-0.5">{{ etapa.label }}</p>
             </div>
             @if (!$last) {
