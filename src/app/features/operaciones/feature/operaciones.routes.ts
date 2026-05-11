@@ -23,6 +23,11 @@ export const OPERACIONES_ROUTES: Routes = [
       import('../desembolso/feature/desembolso.routes').then(m => m.DESEMBOLSO_ROUTES),
   },
   {
+    path: 'seguimiento',
+    loadChildren: () =>
+      import('../seguimiento/feature/seguimiento.routes').then(m => m.SEGUIMIENTO_ROUTES),
+  },
+  {
     path: ':id',
     loadComponent: () => import('./operacion-detalle.page').then(m => m.OperacionDetallePage),
   },
