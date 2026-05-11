@@ -37,6 +37,11 @@ export const routes: Routes = [
           import('./features/liquidacion-mensual/feature/liquidacion.routes').then(m => m.LIQUIDACION_ROUTES),
       },
       {
+        path: 'controles',
+        loadChildren: () =>
+          import('./features/controles/feature/controles.routes').then(m => m.CONTROLES_ROUTES),
+      },
+      {
         path: 'configuracion/empresas',
         loadChildren: () => import('./features/configuracion/empresas/feature/empresas.routes').then(m => m.EMPRESAS_ROUTES),
       },
