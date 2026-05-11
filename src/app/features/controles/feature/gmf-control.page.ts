@@ -4,14 +4,13 @@ import { ControlesService } from '../data-access/controles.service';
 import { DrawerComponent } from '@shared/ui/drawer/drawer.component';
 import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
 import { HasRoleDirective } from '@shared/directives/has-role.directive';
-import { ButtonComponent } from '@shared/ui/button/button.component';
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
 import { GmfEmpresa, DECISION_COLOR, MESES } from '../domain/controles.model';
 
 @Component({
   selector: 'app-gmf-control',
   standalone: true,
-  imports: [FormsModule, DrawerComponent, CurrencyCopPipe, HasRoleDirective, ButtonComponent, EmptyStateComponent],
+  imports: [FormsModule, DrawerComponent, CurrencyCopPipe, HasRoleDirective, EmptyStateComponent],
   template: `
     <div class="space-y-4">
       <div class="flex items-center justify-between">
