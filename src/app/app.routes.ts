@@ -37,6 +37,16 @@ export const routes: Routes = [
           import('./features/liquidacion-mensual/feature/liquidacion.routes').then(m => m.LIQUIDACION_ROUTES),
       },
       {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./features/dashboard/feature/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
+      },
+      {
+        path: 'reportes',
+        loadChildren: () =>
+          import('./features/dashboard/feature/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
+      },
+      {
         path: 'integraciones',
         loadChildren: () =>
           import('./features/integraciones/feature/integraciones.routes').then(m => m.INTEGRACIONES_ROUTES),
