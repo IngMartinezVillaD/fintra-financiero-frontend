@@ -15,7 +15,7 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
-  user: null,
+  user: (() => { try { const r = sessionStorage.getItem('user'); return r ? JSON.parse(r) : null; } catch { return null; } })(),
   accessToken: sessionStorage.getItem('accessToken'),
   refreshToken: sessionStorage.getItem('refreshToken'),
   loading: false,
@@ -37,12 +37,14 @@ export const AuthStore = signalStore(
         switchMap(req => authService.login(req).pipe(
           tapResponse({
             next: (data: AuthData) => {
+              const user = { username: data.username, nombre: data.nombre, roles: data.roles ?? [] };
               sessionStorage.setItem('accessToken', data.accessToken);
               sessionStorage.setItem('refreshToken', data.refreshToken);
+              sessionStorage.setItem('user', JSON.stringify(user));
               patchState(store, {
                 accessToken: data.accessToken,
                 refreshToken: data.refreshToken,
-                user: { username: data.username, nombre: data.nombre, roles: data.roles ?? [] },
+                user,
                 loading: false,
                 error: null,
               });
@@ -58,6 +60,7 @@ export const AuthStore = signalStore(
     logout() {
       sessionStorage.removeItem('accessToken');
       sessionStorage.removeItem('refreshToken');
+      sessionStorage.removeItem('user');
       patchState(store, { user: null, accessToken: null, refreshToken: null });
       router.navigate(['/login']);
     },

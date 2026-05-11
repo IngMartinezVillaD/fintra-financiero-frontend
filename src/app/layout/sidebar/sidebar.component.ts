@@ -86,23 +86,23 @@ interface NavItem {
 })
 export class SidebarComponent {
   protected readonly authStore = inject(AuthStore);
-  protected readonly layout   = inject(LayoutService);
+  protected readonly layout = inject(LayoutService);
 
   private readonly navItems: NavItem[] = [
-    { label: 'Dashboard',           path: '/dashboard',                      icon: 'dashboard',         roles: ['ADMIN','TESORERIA','APROBADOR','CONTABILIDAD','CONSULTA'], section: 'Módulo 9' },
-    { label: 'Operaciones',         path: '/operaciones',                    icon: 'receipt_long',      roles: ['ADMIN','TESORERIA','EMPRESA_RECEPTORA'] },
-    { label: 'Nueva operación',     path: '/operaciones/nueva',              icon: 'add_circle',        roles: ['ADMIN','TESORERIA'] },
-    { label: 'Pend. aprobación',    path: '/operaciones/aprobacion-interna', icon: 'task_alt',          roles: ['APROBADOR','ADMIN'] },
-    { label: 'Bandeja empresa',     path: '/operaciones/aceptacion-empresa', icon: 'handshake',         roles: ['EMPRESA_RECEPTORA','ADMIN'] },
-    { label: 'Desembolsos',         path: '/operaciones/desembolsos',        icon: 'payments',          roles: ['ADMIN','TESORERIA'] },
-    { label: 'Seguimiento',         path: '/operaciones/seguimiento',        icon: 'monitoring',        roles: ['ADMIN','TESORERIA','APROBADOR','CONTABILIDAD','CONSULTA'] },
-    { label: 'Liquidación mensual', path: '/liquidaciones-mensuales',        section: 'Gestión',        icon: 'account_balance',   roles: ['ADMIN','TESORERIA','APROBADOR','CONTABILIDAD'] },
-    { label: 'Control GMF',         path: '/controles/gmf',                  icon: 'receipt',           roles: ['ADMIN','TESORERIA','CONTABILIDAD'] },
-    { label: 'Interés presunto',    path: '/controles/presunto',             icon: 'gavel',             roles: ['ADMIN','TESORERIA','CONTABILIDAD'] },
-    { label: 'Reportes',            path: '/dashboard/reportes',             section: 'Config.',             icon: 'bar_chart',         roles: ['ADMIN','TESORERIA','CONTABILIDAD'] },
-    { label: 'Empresas',            path: '/configuracion/empresas',         icon: 'domain',            roles: ['ADMIN'] },
-    { label: 'Tasas',               path: '/configuracion/tasas-periodo',    icon: 'percent',           roles: ['ADMIN','TESORERIA','APROBADOR'] },
-    { label: 'Integraciones',       path: '/integraciones/estado',           icon: 'settings_ethernet', roles: ['ADMIN'] },
+    { label: 'Dashboard', path: '/dashboard', icon: 'dashboard', roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'], section: 'Préstamos Intercompañía' },
+    { label: 'Operaciones', path: '/operaciones', icon: 'receipt_long', roles: ['ADMIN', 'TESORERIA', 'EMPRESA_RECEPTORA'] },
+    { label: 'Nueva operación', path: '/operaciones/nueva', icon: 'add_circle', roles: ['ADMIN', 'TESORERIA'] },
+    { label: 'Pend. aprobación', path: '/operaciones/aprobacion-interna', icon: 'task_alt', roles: ['APROBADOR', 'ADMIN'] },
+    { label: 'Bandeja empresa', path: '/operaciones/aceptacion-empresa', icon: 'handshake', roles: ['EMPRESA_RECEPTORA', 'ADMIN'] },
+    { label: 'Desembolsos', path: '/operaciones/desembolsos', icon: 'payments', roles: ['ADMIN', 'TESORERIA'] },
+    { label: 'Seguimiento', path: '/operaciones/seguimiento', icon: 'monitoring', roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'] },
+    { label: 'Liquidación mensual', path: '/liquidaciones-mensuales', section: 'Gestión', icon: 'account_balance', roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD'] },
+    { label: 'Control GMF', path: '/controles/gmf', icon: 'receipt', roles: ['ADMIN', 'TESORERIA', 'CONTABILIDAD'] },
+    { label: 'Interés presunto', path: '/controles/presunto', icon: 'gavel', roles: ['ADMIN', 'TESORERIA', 'CONTABILIDAD'] },
+    { label: 'Reportes', path: '/dashboard/reportes', section: 'Config.', icon: 'bar_chart', roles: ['ADMIN', 'TESORERIA', 'CONTABILIDAD'] },
+    { label: 'Empresas', path: '/configuracion/empresas', icon: 'domain', roles: ['ADMIN'] },
+    { label: 'Tasas', path: '/configuracion/tasas-periodo', icon: 'percent', roles: ['ADMIN', 'TESORERIA', 'APROBADOR'] },
+    { label: 'Integraciones', path: '/integraciones/estado', icon: 'settings_ethernet', roles: ['ADMIN'] },
   ];
 
   protected visibleItems() {
