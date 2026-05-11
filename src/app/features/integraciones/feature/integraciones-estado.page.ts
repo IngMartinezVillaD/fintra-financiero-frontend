@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { SlicePipe } from '@angular/common';
 import { IntegracionesService } from '../data-access/integraciones.service';
-import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
 import {
   IntegracionEstado, NotificacionHistorial,
   ESTADO_COLOR, ESTADO_ICON
@@ -9,7 +9,7 @@ import {
 @Component({
   selector: 'app-integraciones-estado',
   standalone: true,
-  imports: [EmptyStateComponent],
+  imports: [SlicePipe],
   template: `
     <div class="space-y-6">
       <div>
