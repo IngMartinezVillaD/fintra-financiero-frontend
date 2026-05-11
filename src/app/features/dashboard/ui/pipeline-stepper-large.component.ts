@@ -12,7 +12,7 @@ import { PipelineConteo, PIPELINE_ETAPAS } from '../domain/dashboard.model';
           <div class="flex flex-col items-center gap-2">
             <div class="rounded-xl px-3 py-3 text-center w-full transition-all"
                  [class]="etapa.color">
-              <p class="text-2xl font-bold">{{ conteo()[$any(etapa.key)] ?? 0 }}</p>
+              <p class="text-2xl font-bold">{{ getConteo(etapa.key) }}</p>
               <p class="text-xs font-medium mt-0.5">{{ etapa.label }}</p>
             </div>
             @if (!$last) {
@@ -30,5 +30,9 @@ import { PipelineConteo, PIPELINE_ETAPAS } from '../domain/dashboard.model';
 })
 export class PipelineStepperLargeComponent {
   conteo = input<PipelineConteo>({ CR: 0, AI: 0, AE: 0, FD: 0, DS: 0 });
+
+  getConteo(key: string): number {
+    return (this.conteo() as unknown as Record<string, number>)[key] ?? 0;
+  }
   etapas = PIPELINE_ETAPAS;
 }
