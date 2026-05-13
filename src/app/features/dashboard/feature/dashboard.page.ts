@@ -18,7 +18,7 @@ import { DashboardData, EvolucionMensual, KpiGerencial } from '../domain/dashboa
   template: `
     <div class="space-y-5">
       <!-- Header -->
-      <div class="flex items-center justify-between">
+      <div class="flex flex-wrap items-start justify-between gap-2">
         <div>
           <h1 class="text-xl font-bold text-neutral-900">Dashboard Financiero</h1>
           <p class="text-xs text-neutral-400 mt-0.5">
@@ -30,12 +30,12 @@ import { DashboardData, EvolucionMensual, KpiGerencial } from '../domain/dashboa
 
       @if (loading()) {
         <!-- Skeleton -->
-        <div class="grid grid-cols-5 gap-2">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
           @for (i of [1,2,3,4,5]; track i) {
             <div class="card p-4 h-20 bg-neutral-100 animate-pulse rounded-xl"></div>
           }
         </div>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           @for (i of [1,2,3]; track i) {
             <div class="card p-5 h-32 bg-neutral-100 animate-pulse rounded-xl"></div>
           }

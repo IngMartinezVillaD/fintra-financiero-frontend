@@ -7,7 +7,7 @@ import { PipelineConteo, PIPELINE_ETAPAS } from '../domain/dashboard.model';
   template: `
     <div class="card p-4">
       <h3 class="text-sm font-semibold text-neutral-600 mb-4">Cartera de operaciones</h3>
-      <div class="grid grid-cols-5 gap-2">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
         @for (etapa of etapas; track etapa.key) {
           <div class="flex flex-col items-center gap-2">
             <div class="rounded-xl px-3 py-3 text-center w-full transition-all"

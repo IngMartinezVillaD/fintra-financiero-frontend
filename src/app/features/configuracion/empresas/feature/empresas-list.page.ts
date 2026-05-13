@@ -16,7 +16,7 @@ import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.componen
   template: `
     <div class="space-y-4">
       <!-- Encabezado -->
-      <div class="flex items-center justify-between">
+      <div class="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 class="text-xl font-bold text-neutral-900">Maestro de Empresas</h1>
           <p class="text-sm text-neutral-500 mt-0.5">Empresas configuradas para operaciones</p>
@@ -28,16 +28,16 @@ import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.componen
       </div>
 
       <!-- Filtros -->
-      <div class="card py-4 flex flex-wrap gap-3">
+      <div class="card py-3 px-3 sm:py-4 sm:px-4 flex flex-wrap gap-3">
         <input [(ngModel)]="busqueda" (ngModelChange)="onBusqueda()"
                type="search" placeholder="Buscar por código, razón social o NIT..."
-               class="form-input w-64">
-        <select [(ngModel)]="filtroEstado" (ngModelChange)="onFiltro()" class="form-input w-36">
+               class="form-input w-full sm:w-64">
+        <select [(ngModel)]="filtroEstado" (ngModelChange)="onFiltro()" class="form-input w-full sm:w-36">
           <option value="">Todos los estados</option>
           <option value="ACTIVA">Activa</option>
           <option value="INACTIVA">Inactiva</option>
         </select>
-        <select [(ngModel)]="filtroRol" (ngModelChange)="onFiltro()" class="form-input w-40">
+        <select [(ngModel)]="filtroRol" (ngModelChange)="onFiltro()" class="form-input w-full sm:w-40">
           <option value="">Todos los roles</option>
           <option value="PRESTAMISTA">Prestamista</option>
           <option value="PRESTATARIA">Prestataria</option>

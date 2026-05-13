@@ -14,7 +14,7 @@ import { AlertaBloqueoComponent } from '../../features/configuracion/tasas-perio
       <div class="flex-1 flex flex-col overflow-hidden">
         <app-navbar />
         <app-alerta-bloqueo />
-        <main class="flex-1 overflow-auto p-6">
+        <main class="flex-1 overflow-auto p-3 sm:p-6">
           <router-outlet />
         </main>
       </div>

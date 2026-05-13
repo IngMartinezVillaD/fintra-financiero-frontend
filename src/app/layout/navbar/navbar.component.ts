@@ -44,18 +44,25 @@ import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
         }
 
         <!-- User menu -->
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center">
+        <div class="flex items-center gap-2.5 pl-3 border-l border-neutral-200">
+          <div class="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center shrink-0">
             <span class="text-white text-sm font-medium">
               {{ authStore.user()?.nombre?.charAt(0) ?? 'U' }}
             </span>
           </div>
-          <span class="text-sm font-medium text-neutral-700 hidden sm:block">
-            {{ authStore.user()?.nombre }}
-          </span>
+          <div class="hidden sm:flex flex-col min-w-0">
+            <span class="text-sm font-medium text-neutral-700 truncate leading-tight">
+              {{ authStore.user()?.nombre }}
+            </span>
+            <span class="text-xs text-neutral-400 truncate leading-tight">
+              {{ authStore.user()?.roles?.join(', ') }}
+            </span>
+          </div>
           <button (click)="authStore.logout()"
-                  class="text-sm text-neutral-500 hover:text-danger transition-colors ml-2">
-            Salir
+                  title="Cerrar sesión"
+                  class="p-1.5 rounded-lg text-neutral-400 hover:bg-red-50 hover:text-red-500
+                         transition-colors shrink-0">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
           </button>
         </div>
       </div>

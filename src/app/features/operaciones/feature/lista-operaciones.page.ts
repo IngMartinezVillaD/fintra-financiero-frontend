@@ -20,7 +20,7 @@ import { EstadoPipeline, OperacionListItem } from '../domain/operacion.model';
   template: `
     <div class="space-y-4">
       <!-- Header -->
-      <div class="flex items-center justify-between">
+      <div class="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 class="text-xl font-bold text-neutral-900">Operaciones</h1>
           <p class="text-sm text-neutral-500 mt-0.5">Préstamos intercompañía en cartera</p>
@@ -32,11 +32,11 @@ import { EstadoPipeline, OperacionListItem } from '../domain/operacion.model';
       </div>
 
       <!-- Filtros -->
-      <div class="card py-4 flex flex-wrap gap-3">
+      <div class="card py-3 px-3 sm:py-4 sm:px-4 flex flex-wrap gap-3">
         <input [(ngModel)]="filtroRef" (ngModelChange)="onBusqueda()"
                type="search" placeholder="Buscar por referencia..."
-               class="form-input w-48">
-        <select [(ngModel)]="filtroEstado" (ngModelChange)="onFiltro()" class="form-input w-44">
+               class="form-input w-full sm:w-48">
+        <select [(ngModel)]="filtroEstado" (ngModelChange)="onFiltro()" class="form-input w-full sm:w-44">
           <option value="">Todos los estados</option>
           @for (s of estados; track s.value) {
             <option [value]="s.value">{{ s.label }}</option>

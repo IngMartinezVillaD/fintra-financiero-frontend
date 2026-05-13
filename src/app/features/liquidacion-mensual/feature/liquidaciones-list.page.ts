@@ -17,7 +17,7 @@ import {
   imports: [FormsModule, CurrencyCopPipe, HasRoleDirective, EmptyStateComponent, ButtonComponent],
   template: `
     <div class="space-y-4">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 class="text-xl font-bold text-neutral-900">Liquidación mensual</h1>
           <p class="text-sm text-neutral-500 mt-0.5">Cierre mensual de intereses por operaciones vigentes</p>
@@ -34,7 +34,7 @@ import {
       @if (mostrarFormNueva()) {
         <div class="card p-4 border-brand-primary/30 border">
           <p class="text-sm font-semibold text-neutral-700 mb-3">Nueva liquidación</p>
-          <div class="flex items-end gap-4">
+          <div class="flex flex-wrap items-end gap-3">
             <div>
               <label class="block text-xs text-neutral-500 mb-1">Año</label>
               <input type="number" [(ngModel)]="formAnio" min="2020" max="2099"
@@ -43,7 +43,7 @@ import {
             <div>
               <label class="block text-xs text-neutral-500 mb-1">Mes</label>
               <select [(ngModel)]="formMes"
-                      class="rounded border border-neutral-300 px-3 py-2 text-sm">
+                      class="rounded border border-neutral-300 px-3 py-2 text-sm w-full sm:w-auto">
                 @for (m of meses; track m.num) {
                   <option [value]="m.num">{{ m.nombre }}</option>
                 }
