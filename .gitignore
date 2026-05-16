@@ -7,3 +7,4 @@ dist/
 .env.local
 coverage/
 e2e/results/
+.claude/worktrees/
