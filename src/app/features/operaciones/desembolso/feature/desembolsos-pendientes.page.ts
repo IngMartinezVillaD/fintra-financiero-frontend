@@ -4,6 +4,7 @@ import { DesembolsoService } from '../data-access/desembolso.service';
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
 import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
 import { OperacionListItem } from '../../domain/operacion.model';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'app-desembolsos-pendientes',
@@ -94,6 +95,7 @@ import { OperacionListItem } from '../../domain/operacion.model';
 export class DesembolsosPendientesPage implements OnInit {
   private readonly svc    = inject(DesembolsoService);
   private readonly router = inject(Router);
+  private readonly toast  = inject(ToastService);
 
   items   = signal<OperacionListItem[]>([]);
   loading = signal(true);
@@ -102,7 +104,7 @@ export class DesembolsosPendientesPage implements OnInit {
   ngOnInit() {
     this.svc.pendientes().subscribe({
       next: data => { this.items.set(data); this.loading.set(false); },
-      error: ()   => { this.error.set('No se pudieron cargar los pendientes'); this.loading.set(false); },
+      error: ()   => { this.error.set('No se pudieron cargar los pendientes'); this.loading.set(false); this.toast.error('No se pudieron cargar los pendientes'); },
     });
   }
 

@@ -4,43 +4,49 @@ import { Router } from '@angular/router';
 import { OperacionesService } from '../data-access/operaciones.service';
 import { EmpresasService } from '../../configuracion/empresas/data-access/empresas.service';
 import { TasasService } from '../../configuracion/tasas-periodo/data-access/tasas.service';
-import { ButtonComponent } from '@shared/ui/button/button.component';
-import { FormFieldComponent } from '@shared/ui/form-field/form-field.component';
 import { getErrorMessage, markAllAsTouched } from '@shared/utils/form.utils';
 import { AvisoTramoAnterior, CobraInteres } from '../domain/operacion.model';
 import { EmpresaListItem, CuentaBancaria } from '../../configuracion/empresas/domain/empresa.model';
 import { TasaPeriodo } from '../../configuracion/tasas-periodo/domain/tasa-periodo.model';
 import { MoneyInputComponent } from '@shared/ui/money-input/money-input.component';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'app-nueva-operacion',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent, FormFieldComponent, MoneyInputComponent],
+  imports: [ReactiveFormsModule, MoneyInputComponent],
   template: `
-    <div class="max-w-3xl mx-auto space-y-6">
-      <!-- Header -->
-      <div class="flex items-center gap-3">
-        <button (click)="volver()" class="text-neutral-400 hover:text-neutral-700 transition-colors">
-          <span class="material-symbols-outlined">arrow_back</span>
-        </button>
-        <div>
-          <h1 class="text-xl font-bold text-neutral-900">Nueva operación</h1>
-          <p class="text-sm text-neutral-500">Préstamo intercompañía — Etapa CR</p>
+    <div class="max-w-3xl mx-auto">
+
+      <!-- Page header -->
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <button (click)="volver()" class="text-neutral-400 hover:text-neutral-700 transition-colors mt-0.5">
+            <span class="material-symbols-outlined text-xl">arrow_back</span>
+          </button>
+          <div>
+            <h1 class="text-[17px] font-bold text-neutral-900">Nueva operación</h1>
+            <p class="text-[12px] text-neutral-400 mt-0.5">Préstamo intercompañía — Etapa CR</p>
+          </div>
         </div>
+        <button type="button" (click)="volver()"
+                class="px-3.5 py-[7px] rounded-lg bg-neutral-100 text-neutral-600 text-xs font-semibold hover:bg-neutral-200 transition-colors">
+          Cancelar
+        </button>
       </div>
 
-      <!-- Stepper visual -->
-      <div class="card py-3 px-6">
+      <!-- Stepper -->
+      <div class="bg-white border border-neutral-200 rounded-lg px-6 py-4 mb-3">
         <div class="flex gap-0">
           @for (s of steps; track s.num; let last = $last) {
             <div class="flex items-center">
               <div class="flex flex-col items-center">
                 <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors"
-                     [class]="currentStep() >= s.num ? 'bg-brand-primary text-white' : 'bg-neutral-200 text-neutral-400'">
+                     [class]="currentStep() >= s.num ? 'bg-brand-primary text-white' : 'bg-neutral-100 text-neutral-400'">
                   {{ s.num }}
                 </div>
-                <span class="text-xs mt-1 w-16 text-center leading-tight"
-                      [class]="currentStep() >= s.num ? 'text-neutral-700 font-medium' : 'text-neutral-400'">
+                <span class="text-[10px] mt-1 w-16 text-center leading-tight font-medium"
+                      [class]="currentStep() >= s.num ? 'text-neutral-700' : 'text-neutral-400'">
                   {{ s.label }}
                 </span>
               </div>
@@ -53,18 +59,18 @@ import { MoneyInputComponent } from '@shared/ui/money-input/money-input.componen
         </div>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="guardar()">
+      <form [formGroup]="form" class="space-y-3">
 
         <!-- STEP 1 — Partes -->
         @if (currentStep() === 1) {
-          <div class="card space-y-4">
-            <h2 class="text-base font-semibold text-neutral-800 border-b border-neutral-100 pb-3">
-              Partes de la operación
-            </h2>
-            <div class="grid grid-cols-2 gap-4 items-end">
-              <app-form-field label="Empresa Prestamista" [required]="true" [error]="err('empresaPrestamistaId')">
-                <select formControlName="empresaPrestamistaId" class="form-input"
-                        (change)="onPrestamistaChange()">
+          <div class="section-block">
+            <div class="section-header">
+              <span class="section-title">Partes de la operación</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3 p-3.5 pb-0">
+              <div class="flex flex-col gap-1">
+                <label class="field-label">Empresa Prestamista <span class="text-danger">*</span></label>
+                <select formControlName="empresaPrestamistaId" class="field-input" (change)="onPrestamistaChange()">
                   <option value="">Seleccionar...</option>
                   @for (e of empresas(); track e.id) {
                     @if (e.rolPermitido === 'PRESTAMISTA' || e.rolPermitido === 'AMBOS') {
@@ -72,53 +78,60 @@ import { MoneyInputComponent } from '@shared/ui/money-input/money-input.componen
                     }
                   }
                 </select>
-              </app-form-field>
-
-              <div class="flex items-center justify-center pb-6">
-                <span class="material-symbols-outlined text-brand-primary text-2xl">arrow_forward</span>
+                @if (err('empresaPrestamistaId')) {
+                  <span class="text-[10px] text-danger">{{ err('empresaPrestamistaId') }}</span>
+                }
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="field-label">Empresa Prestataria <span class="text-danger">*</span></label>
+                <select formControlName="empresaPrestatariaId" class="field-input" (change)="onPrestatariaChange()">
+                  <option value="">Seleccionar...</option>
+                  @for (e of empresas(); track e.id) {
+                    @if (e.rolPermitido === 'PRESTATARIA' || e.rolPermitido === 'AMBOS') {
+                      <option [value]="e.id"
+                              [disabled]="e.id === +(form.value.empresaPrestamistaId ?? 0)">
+                        {{ e.codigoInterno }} — {{ e.razonSocial }}
+                      </option>
+                    }
+                  }
+                </select>
+                @if (err('empresaPrestatariaId')) {
+                  <span class="text-[10px] text-danger">{{ err('empresaPrestatariaId') }}</span>
+                }
               </div>
             </div>
-            <app-form-field label="Empresa Prestataria" [required]="true" [error]="err('empresaPrestatariaId')">
-              <select formControlName="empresaPrestatariaId" class="form-input"
-                      (change)="onPrestatariaChange()">
-                <option value="">Seleccionar...</option>
-                @for (e of empresas(); track e.id) {
-                  @if (e.rolPermitido === 'PRESTATARIA' || e.rolPermitido === 'AMBOS') {
-                    <option [value]="e.id"
-                            [disabled]="e.id === +(form.value.empresaPrestamistaId ?? 0)">
-                      {{ e.codigoInterno }} — {{ e.razonSocial }}
-                    </option>
-                  }
-                }
-              </select>
-            </app-form-field>
+            <div class="p-3.5 pt-2">
+              <div class="flex items-center gap-2 justify-center text-neutral-300">
+                <span class="material-symbols-outlined text-2xl text-brand-primary">arrow_forward</span>
+              </div>
+            </div>
           </div>
         }
 
         <!-- STEP 2 — Condiciones de interés -->
         @if (currentStep() === 2) {
-          <div class="card space-y-4">
-            <h2 class="text-base font-semibold text-neutral-800 border-b border-neutral-100 pb-3">
-              Condiciones de interés
-            </h2>
-            <div class="space-y-3">
+          <div class="section-block">
+            <div class="section-header">
+              <span class="section-title">Condiciones de interés</span>
+            </div>
+            <div class="p-3.5 space-y-2">
               @for (opt of cobraInteresOpts; track opt.value) {
-                <label class="flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors"
+                <label class="flex items-start gap-3 px-3.5 py-3 rounded-lg border cursor-pointer transition-colors"
                        [class]="form.value.cobraInteres === opt.value
                          ? 'border-brand-primary bg-brand-light'
-                         : 'border-neutral-200 hover:border-neutral-300'">
+                         : 'border-neutral-200 hover:border-neutral-300 bg-white'">
                   <input type="radio" formControlName="cobraInteres" [value]="opt.value"
                          class="mt-0.5 accent-brand-primary shrink-0">
                   <div>
-                    <p class="font-medium text-sm text-neutral-800">{{ opt.label }}</p>
-                    <p class="text-xs text-neutral-500 mt-0.5">{{ opt.hint }}</p>
+                    <p class="text-xs font-semibold text-neutral-800">{{ opt.label }}</p>
+                    <p class="text-[11px] text-neutral-500 mt-0.5">{{ opt.hint }}</p>
                     @if (opt.value === 'SI_COMERCIAL' && tasaComercial()) {
-                      <p class="text-xs text-success mt-1 font-medium">
+                      <p class="text-[11px] text-success mt-1 font-semibold">
                         Tasa vigente: {{ tasaComercial()!.valorPorcentajeEfectivoAnual }}% E.A.
                       </p>
                     }
                     @if (opt.value === 'SI_COMERCIAL' && !tasaComercial()) {
-                      <p class="text-xs text-danger mt-1">⚠ No hay tasa comercial vigente</p>
+                      <p class="text-[11px] text-danger mt-1">⚠ No hay tasa comercial vigente</p>
                     }
                   </div>
                 </label>
@@ -129,145 +142,169 @@ import { MoneyInputComponent } from '@shared/ui/money-input/money-input.componen
 
         <!-- STEP 3 — Cuentas y monto -->
         @if (currentStep() === 3) {
-          <div class="card space-y-4">
-            <h2 class="text-base font-semibold text-neutral-800 border-b border-neutral-100 pb-3">
-              Cuentas bancarias y monto
-            </h2>
-            <app-form-field label="Cuenta origen (Prestamista)" [error]="err('cuentaOrigenId')">
-              <select formControlName="cuentaOrigenId" class="form-input">
-                <option value="">Sin cuenta origen</option>
-                @for (c of cuentasPrestamista(); track c.id) {
-                  <option [value]="c.id">
-                    {{ c.bancoNombre }} — {{ c.numeroCuenta }} ({{ c.tipo }})
-                    {{ c.exentaGmf ? '• Exenta GMF' : '' }}
-                  </option>
-                }
-              </select>
-            </app-form-field>
-            <app-form-field label="Cuenta destino (Prestataria)" [error]="err('cuentaDestinoId')">
-              <select formControlName="cuentaDestinoId" class="form-input">
-                <option value="">Sin cuenta destino</option>
-                @for (c of cuentasPrestataria(); track c.id) {
-                  <option [value]="c.id">
-                    {{ c.bancoNombre }} — {{ c.numeroCuenta }} ({{ c.tipo }})
-                    {{ c.exentaGmf ? '• Exenta GMF' : '' }}
-                  </option>
-                }
-              </select>
-            </app-form-field>
-            <app-form-field label="Monto estimado" hint="Referencial — el monto real se confirma en el desembolso">
-              <app-money-input formControlName="montoEstimado"/>
-            </app-form-field>
+          <div class="section-block">
+            <div class="section-header">
+              <span class="section-title">Cuentas bancarias y monto</span>
+            </div>
+            <div class="p-3.5 space-y-3">
+              <div class="flex flex-col gap-1">
+                <label class="field-label">Cuenta origen (Prestamista)</label>
+                <select formControlName="cuentaOrigenId" class="field-input">
+                  <option value="">Sin cuenta origen</option>
+                  @for (c of cuentasPrestamista(); track c.id) {
+                    <option [value]="c.id">
+                      {{ c.bancoNombre }} — {{ c.numeroCuenta }} ({{ c.tipo }}){{ c.exentaGmf ? ' · Exenta GMF' : '' }}
+                    </option>
+                  }
+                </select>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="field-label">Cuenta destino (Prestataria)</label>
+                <select formControlName="cuentaDestinoId" class="field-input">
+                  <option value="">Sin cuenta destino</option>
+                  @for (c of cuentasPrestataria(); track c.id) {
+                    <option [value]="c.id">
+                      {{ c.bancoNombre }} — {{ c.numeroCuenta }} ({{ c.tipo }}){{ c.exentaGmf ? ' · Exenta GMF' : '' }}
+                    </option>
+                  }
+                </select>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="field-label">Monto estimado
+                  <span class="ml-1 font-normal normal-case tracking-normal text-neutral-400">Referencial — el monto real se confirma en el desembolso</span>
+                </label>
+                <app-money-input formControlName="montoEstimado"/>
+              </div>
+            </div>
           </div>
         }
 
-        <!-- STEP 4 — Soporte y observaciones -->
+        <!-- STEP 4 — Soporte documental -->
         @if (currentStep() === 4) {
-          <div class="card space-y-4">
-            <h2 class="text-base font-semibold text-neutral-800 border-b border-neutral-100 pb-3">
-              Soporte documental
-            </h2>
-            <app-form-field label="N° Documento soporte (Campo 10 ERP)" [required]="true" [error]="err('numDocumentoSoporte')">
-              <input formControlName="numDocumentoSoporte" class="form-input" placeholder="CONT-2026-018">
-            </app-form-field>
-            <app-form-field label="Observaciones (Campo 27 ERP)" [required]="true" [error]="err('observaciones')">
-              <textarea formControlName="observaciones" class="form-input min-h-28"
-                        placeholder="Préstamo para capital de trabajo Q2 2026..."></textarea>
-            </app-form-field>
+          <div class="section-block">
+            <div class="section-header">
+              <span class="section-title">Soporte documental</span>
+            </div>
+            <div class="p-3.5 space-y-3">
+              <div class="flex flex-col gap-1">
+                <label class="field-label">N° Documento soporte (Campo 10 ERP) <span class="text-danger">*</span></label>
+                <input formControlName="numDocumentoSoporte" class="field-input" placeholder="CONT-2026-018">
+                @if (err('numDocumentoSoporte')) {
+                  <span class="text-[10px] text-danger">{{ err('numDocumentoSoporte') }}</span>
+                }
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="field-label">Observaciones (Campo 27 ERP) <span class="text-danger">*</span></label>
+                <textarea formControlName="observaciones" class="field-input min-h-28 resize-none"
+                          placeholder="Préstamo para capital de trabajo Q2 2026..."></textarea>
+                @if (err('observaciones')) {
+                  <span class="text-[10px] text-danger">{{ err('observaciones') }}</span>
+                }
+              </div>
+            </div>
           </div>
         }
 
-        <!-- STEP 5 — Revisión -->
+        <!-- STEP 5 — Revisión final -->
         @if (currentStep() === 5) {
-          <div class="card space-y-4">
-            <h2 class="text-base font-semibold text-neutral-800 border-b border-neutral-100 pb-3">
-              Revisión final
-            </h2>
-            <dl class="grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <dt class="text-neutral-500">Prestamista</dt>
-                <dd class="font-medium text-neutral-800">{{ empresaLabel(form.value.empresaPrestamistaId) }}</dd>
-              </div>
-              <div>
-                <dt class="text-neutral-500">Prestataria</dt>
-                <dd class="font-medium text-neutral-800">{{ empresaLabel(form.value.empresaPrestatariaId) }}</dd>
-              </div>
-              <div>
-                <dt class="text-neutral-500">Cobra interés</dt>
-                <dd class="font-medium">{{ interesLabel(form.value.cobraInteres ?? '') }}</dd>
-              </div>
-              <div>
-                <dt class="text-neutral-500">Monto estimado</dt>
-                <dd class="font-medium font-mono">{{ form.value.montoEstimado ?? '—' }}</dd>
-              </div>
-              <div>
-                <dt class="text-neutral-500">N° Soporte</dt>
-                <dd class="font-medium">{{ form.value.numDocumentoSoporte }}</dd>
-              </div>
-            </dl>
+          <div class="section-block">
+            <div class="section-header">
+              <span class="section-title">Revisión final</span>
+            </div>
+            <div class="p-3.5 space-y-3">
+              <dl class="grid grid-cols-2 gap-x-6 gap-y-3">
+                <div class="flex flex-col gap-0.5">
+                  <dt class="field-label">Prestamista</dt>
+                  <dd class="text-xs font-semibold text-neutral-800">{{ empresaLabel(form.value.empresaPrestamistaId) }}</dd>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <dt class="field-label">Prestataria</dt>
+                  <dd class="text-xs font-semibold text-neutral-800">{{ empresaLabel(form.value.empresaPrestatariaId) }}</dd>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <dt class="field-label">Cobra interés</dt>
+                  <dd class="text-xs font-semibold text-neutral-800">{{ interesLabel(form.value.cobraInteres ?? '') }}</dd>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <dt class="field-label">Monto estimado</dt>
+                  <dd class="text-xs font-semibold font-mono text-neutral-800">{{ form.value.montoEstimado || '—' }}</dd>
+                </div>
+                <div class="flex flex-col gap-0.5">
+                  <dt class="field-label">N° Soporte</dt>
+                  <dd class="text-xs font-semibold text-neutral-800">{{ form.value.numDocumentoSoporte }}</dd>
+                </div>
+              </dl>
 
-            <!-- Aviso tramo anterior -->
-            @if (avisoTramo()) {
-              <div class="bg-warning-light border border-warning rounded-lg p-4 space-y-2">
-                <p class="font-semibold text-warning text-sm flex items-center gap-2">
-                  <span class="material-symbols-outlined text-base">info</span>
-                  Aviso — Tramo anterior activo
-                </p>
-                <p class="text-sm text-neutral-700">
-                  La empresa prestataria tiene un crédito activo
-                  ({{ avisoTramo()!.referencia }}) con saldo capital de
-                  <strong>{{ avisoTramo()!.saldoCapital }}</strong>.
-                </p>
-                <p class="text-sm text-neutral-700">
-                  Días transcurridos del tramo: <strong>{{ avisoTramo()!.diasTranscurridos }}</strong> —
-                  Interés estimado causado:
-                  <strong class="text-warning">{{ avisoTramo()!.interesEstimado }}</strong>
-                </p>
-                <p class="text-xs text-neutral-500">
-                  Este interés se liquidará antes de abrir el nuevo tramo al momento del desembolso.
-                </p>
-              </div>
-            }
+              @if (avisoTramo()) {
+                <div class="bg-warning-light border border-warning/30 rounded-lg p-3.5 space-y-1.5 mt-1">
+                  <p class="text-xs font-bold text-warning flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">info</span>
+                    Aviso — Tramo anterior activo
+                  </p>
+                  <p class="text-[11px] text-neutral-700">
+                    La empresa prestataria tiene un crédito activo
+                    ({{ avisoTramo()!.referencia }}) con saldo capital de
+                    <strong>{{ avisoTramo()!.saldoCapital }}</strong>.
+                  </p>
+                  <p class="text-[11px] text-neutral-700">
+                    Días transcurridos: <strong>{{ avisoTramo()!.diasTranscurridos }}</strong> —
+                    Interés estimado causado:
+                    <strong class="text-warning">{{ avisoTramo()!.interesEstimado }}</strong>
+                  </p>
+                  <p class="text-[10px] text-neutral-400">
+                    Este interés se liquidará antes de abrir el nuevo tramo al momento del desembolso.
+                  </p>
+                </div>
+              }
+            </div>
           </div>
         }
 
         <!-- Error -->
         @if (error()) {
-          <div class="bg-danger-light border border-danger/30 text-danger text-sm rounded-lg p-3" role="alert">
+          <div class="flex items-center gap-2 bg-danger-light border border-danger/30 text-danger text-xs rounded-lg px-4 py-3" role="alert">
+            <span class="material-symbols-outlined text-base">error</span>
             {{ error() }}
           </div>
         }
 
         <!-- Navegación steps -->
-        <div class="flex gap-3 justify-between">
-          <app-button variant="ghost" type="button"
-                      (clicked)="currentStep() === 1 ? volver() : prevStep()">
-            {{ currentStep() === 1 ? 'Cancelar' : 'Anterior' }}
-          </app-button>
-          <div class="flex gap-3">
+        <div class="flex items-center justify-between pt-1">
+          <button type="button" (click)="currentStep() === 1 ? volver() : prevStep()"
+                  class="px-3.5 py-[7px] rounded-lg bg-neutral-100 text-neutral-600 text-xs font-semibold hover:bg-neutral-200 transition-colors">
+            {{ currentStep() === 1 ? 'Cancelar' : '← Anterior' }}
+          </button>
+          <div class="flex gap-2">
             @if (currentStep() < 5) {
-              <app-button type="button" (clicked)="nextStep()">Siguiente</app-button>
+              <button type="button" (click)="nextStep()"
+                      class="px-3.5 py-[7px] rounded-lg bg-brand-primary text-white text-xs font-semibold hover:bg-brand-secondary transition-colors">
+                Siguiente →
+              </button>
             } @else {
-              <app-button variant="secondary" type="button" [loading]="saving()"
-                          (clicked)="guardar(false)">
+              <button type="button" (click)="guardar(false)" [disabled]="saving()"
+                      class="flex items-center gap-1.5 px-3.5 py-[7px] rounded-lg border border-brand-primary text-brand-primary text-xs font-semibold hover:bg-brand-light transition-colors disabled:opacity-50">
+                @if (saving()) { <span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> }
                 Guardar borrador (CR)
-              </app-button>
-              <app-button type="button" [loading]="saving()"
-                          (clicked)="guardar(true)">
+              </button>
+              <button type="button" (click)="guardar(true)" [disabled]="saving()"
+                      class="flex items-center gap-1.5 px-3.5 py-[7px] rounded-lg bg-brand-primary text-white text-xs font-semibold hover:bg-brand-secondary transition-colors disabled:opacity-50">
+                @if (saving()) { <span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> }
                 Enviar a aprobación
-              </app-button>
+              </button>
             }
           </div>
         </div>
+
       </form>
     </div>
   `,
 })
 export class NuevaOperacionPage implements OnInit {
-  private readonly svc        = inject(OperacionesService);
+  private readonly svc         = inject(OperacionesService);
   private readonly empresasSvc = inject(EmpresasService);
-  private readonly tasasSvc   = inject(TasasService);
-  private readonly router     = inject(Router);
+  private readonly tasasSvc    = inject(TasasService);
+  private readonly router      = inject(Router);
+  private readonly toast       = inject(ToastService);
 
   protected currentStep = signal(1);
   protected saving      = signal(false);
@@ -275,8 +312,8 @@ export class NuevaOperacionPage implements OnInit {
   protected empresas    = signal<EmpresaListItem[]>([]);
   protected cuentasPrestamista = signal<CuentaBancaria[]>([]);
   protected cuentasPrestataria = signal<CuentaBancaria[]>([]);
-  protected tasaComercial  = signal<TasaPeriodo | null>(null);
-  protected avisoTramo     = signal<any | null>(null);
+  protected tasaComercial      = signal<TasaPeriodo | null>(null);
+  protected avisoTramo         = signal<any | null>(null);
 
   protected readonly steps = [
     { num: 1, label: 'Partes' },
@@ -369,11 +406,11 @@ export class NuevaOperacionPage implements OnInit {
     const request = {
       empresaPrestamistaId: +v.empresaPrestamistaId!,
       empresaPrestatariaId: +v.empresaPrestatariaId!,
-      cobraInteres: v.cobraInteres as CobraInteres,
+      cobraInteres:    v.cobraInteres as CobraInteres,
       cuentaOrigenId:  v.cuentaOrigenId  ? +v.cuentaOrigenId  : undefined,
       cuentaDestinoId: v.cuentaDestinoId ? +v.cuentaDestinoId : undefined,
-      montoEstimado: v.montoEstimado || undefined,
-      observaciones: v.observaciones!,
+      montoEstimado:       v.montoEstimado || undefined,
+      observaciones:       v.observaciones!,
       numDocumentoSoporte: v.numDocumentoSoporte!,
     };
 
@@ -381,17 +418,20 @@ export class NuevaOperacionPage implements OnInit {
       next: (op) => {
         if (enviarAprobacion) {
           this.svc.enviarAprobacion(op.id).subscribe({
-            next: () => { this.saving.set(false); this.router.navigate(['/operaciones', op.id]); },
-            error: () => { this.saving.set(false); this.router.navigate(['/operaciones', op.id]); },
+            next:  () => { this.saving.set(false); this.toast.success('Operación creada exitosamente'); this.router.navigate(['/operaciones', op.id]); },
+            error: () => { this.saving.set(false); this.toast.success('Operación creada exitosamente'); this.router.navigate(['/operaciones', op.id]); },
           });
         } else {
           this.saving.set(false);
+          this.toast.success('Operación creada exitosamente');
           this.router.navigate(['/operaciones', op.id]);
         }
       },
       error: (e) => {
         this.saving.set(false);
-        this.error.set(e.error?.message ?? 'Error al crear la operación');
+        const msg = e.error?.message ?? 'Error al crear la operación';
+        this.error.set(msg);
+        this.toast.error(msg);
       },
     });
   }

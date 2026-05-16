@@ -4,6 +4,7 @@ import { SeguimientoService } from '../data-access/seguimiento.service';
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component';
 import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
 import { OperacionListItem } from '../../domain/operacion.model';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'app-seguimiento',
@@ -86,6 +87,7 @@ import { OperacionListItem } from '../../domain/operacion.model';
 export class SeguimientoPage implements OnInit {
   private readonly svc    = inject(SeguimientoService);
   private readonly router = inject(Router);
+  private readonly toast  = inject(ToastService);
 
   items   = signal<OperacionListItem[]>([]);
   loading = signal(true);
@@ -94,7 +96,7 @@ export class SeguimientoPage implements OnInit {
   ngOnInit() {
     this.svc.listarVigentes().subscribe({
       next: d => { this.items.set(d); this.loading.set(false); },
-      error: () => { this.error.set('Error cargando operaciones'); this.loading.set(false); },
+      error: () => { this.error.set('Error cargando operaciones'); this.loading.set(false); this.toast.error('Error cargando operaciones'); },
     });
   }
 

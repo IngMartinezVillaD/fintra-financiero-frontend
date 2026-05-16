@@ -5,6 +5,7 @@ import { SeguimientoService } from '../data-access/seguimiento.service';
 import { CurrencyCopPipe } from '@shared/pipes/currency-cop.pipe';
 import { ButtonComponent } from '@shared/ui/button/button.component';
 import { RegistrarAbonoRequest, RegistrarAbonoResponse } from '../domain/seguimiento.model';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'app-registrar-abono-dialog',
@@ -121,7 +122,8 @@ import { RegistrarAbonoRequest, RegistrarAbonoResponse } from '../domain/seguimi
   `,
 })
 export class RegistrarAbonoDialog implements OnChanges {
-  private readonly svc = inject(SeguimientoService);
+  private readonly svc   = inject(SeguimientoService);
+  private readonly toast = inject(ToastService);
 
   open        = input(false);
   operacionId = input(0);
@@ -179,10 +181,12 @@ export class RegistrarAbonoDialog implements OnChanges {
     this.saving.set(true);
     this.error.set(null);
     this.svc.registrarAbono(this.operacionId(), this.form).subscribe({
-      next: res => { this.saving.set(false); this.registrado.emit(res); },
+      next: res => { this.saving.set(false); this.toast.success('Abono registrado exitosamente'); this.registrado.emit(res); },
       error: err => {
         this.saving.set(false);
-        this.error.set(err?.error?.message ?? 'Error al registrar el abono');
+        const msg = err?.error?.message ?? 'Error al registrar el abono';
+        this.error.set(msg);
+        this.toast.error(msg);
       },
     });
   }

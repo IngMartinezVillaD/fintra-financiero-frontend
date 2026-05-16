@@ -10,6 +10,7 @@ import { ConfirmDialogComponent } from '@shared/ui/confirm-dialog/confirm-dialog
 import {
   LiquidacionMensual, LIQUIDACION_ESTADO_COLOR, LIQUIDACION_ESTADO_LABEL
 } from '../domain/liquidacion.model';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'app-liquidacion-detalle',
@@ -169,6 +170,7 @@ export class LiquidacionDetallePage implements OnInit, OnDestroy {
   readonly router        = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly svc   = inject(LiquidacionService);
+  private readonly toast = inject(ToastService);
 
   liqId  = 0;
   liq    = signal<LiquidacionMensual | null>(null);
@@ -199,32 +201,32 @@ export class LiquidacionDetallePage implements OnInit, OnDestroy {
   calcular() {
     this.saving.set(true); this.error.set(null);
     this.svc.calcular(this.liqId).subscribe({
-      next: d => { this.liq.set(d); this.saving.set(false); },
-      error: err => { this.error.set(err?.error?.message ?? 'Error al calcular'); this.saving.set(false); },
+      next: d => { this.liq.set(d); this.saving.set(false); this.toast.success('Liquidación calculada exitosamente'); },
+      error: err => { const msg = err?.error?.message ?? 'Error al calcular'; this.error.set(msg); this.toast.error(msg); this.saving.set(false); },
     });
   }
 
   aprobar() {
     this.confirmarAprobar = false; this.saving.set(true);
     this.svc.aprobar(this.liqId).subscribe({
-      next: d => { this.liq.set(d); this.saving.set(false); },
-      error: err => { this.error.set(err?.error?.message ?? 'Error al aprobar'); this.saving.set(false); },
+      next: d => { this.liq.set(d); this.saving.set(false); this.toast.success('Liquidación aprobada exitosamente'); },
+      error: err => { const msg = err?.error?.message ?? 'Error al aprobar'; this.error.set(msg); this.toast.error(msg); this.saving.set(false); },
     });
   }
 
   revertir() {
     this.confirmarRevertir = false; this.saving.set(true);
     this.svc.revertir(this.liqId).subscribe({
-      next: d => { this.liq.set(d); this.saving.set(false); },
-      error: err => { this.error.set(err?.error?.message ?? 'Error al revertir'); this.saving.set(false); },
+      next: d => { this.liq.set(d); this.saving.set(false); this.toast.success('Liquidación revertida a borrador'); },
+      error: err => { const msg = err?.error?.message ?? 'Error al revertir'; this.error.set(msg); this.toast.error(msg); this.saving.set(false); },
     });
   }
 
   marcarContabilizada() {
     this.saving.set(true);
     this.svc.marcarContabilizada(this.liqId).subscribe({
-      next: d => { this.liq.set(d); this.saving.set(false); },
-      error: err => { this.error.set(err?.error?.message ?? 'Error'); this.saving.set(false); },
+      next: d => { this.liq.set(d); this.saving.set(false); this.toast.success('Liquidación marcada como contabilizada'); },
+      error: err => { const msg = err?.error?.message ?? 'Error'; this.error.set(msg); this.toast.error(msg); this.saving.set(false); },
     });
   }
 

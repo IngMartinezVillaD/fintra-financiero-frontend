@@ -51,6 +51,29 @@
   .badge-warning  { @apply bg-warning-light text-warning text-xs font-medium px-2.5 py-0.5 rounded-full; }
   .badge-danger   { @apply bg-danger-light text-danger text-xs font-medium px-2.5 py-0.5 rounded-full; }
 
+  /* Estilos tipo mockup para formularios de ficha */
+  .field-label {
+    @apply text-[10px] font-bold text-neutral-400 uppercase tracking-wide;
+  }
+  .field-input {
+    @apply w-full bg-white border border-neutral-300 rounded-md px-2.5 py-[7px] text-xs
+           text-neutral-900 focus:border-brand-primary focus:outline-none focus:ring-1
+           focus:ring-brand-primary disabled:bg-neutral-50 disabled:text-neutral-400;
+  }
+  .section-block {
+    @apply bg-neutral-50 border border-neutral-200 rounded-lg overflow-hidden;
+  }
+  .section-header {
+    @apply flex items-center gap-2 px-4 py-2.5 bg-white border-b border-neutral-200;
+  }
+  .section-title {
+    @apply text-xs font-bold text-neutral-800;
+  }
+  .step-num {
+    @apply w-5 h-5 bg-brand-primary text-white rounded-full flex items-center
+           justify-center text-[10px] font-bold shrink-0;
+  }
+
   /* Scrollbar del sidebar */
   .sidebar-scroll::-webkit-scrollbar        { width: 4px; }
   .sidebar-scroll::-webkit-scrollbar-track  { background: transparent; }

@@ -64,6 +64,16 @@ export const routes: Routes = [
         path: 'configuracion/tasas-periodo',
         loadChildren: () => import('./features/configuracion/tasas-periodo/feature/tasas.routes').then(m => m.TASAS_ROUTES),
       },
+      {
+        path: 'configuracion/geo',
+        loadComponent: () => import('./features/configuracion/geo/geo-catalog.page').then(m => m.GeoCatalogPage),
+      },
+      {
+        path: 'consultas/cuentas-bancarias',
+        loadComponent: () =>
+          import('./features/consultas/cuentas-bancarias/cuentas-bancarias-consulta.page')
+            .then(m => m.CuentasBancariasConsultaPage),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

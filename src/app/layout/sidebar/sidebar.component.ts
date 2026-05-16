@@ -179,9 +179,10 @@ export class SidebarComponent implements OnInit {
           label: 'Configuraciones',
           icon: 'settings',
           items: [
-            { label: 'Empresas',      path: '/configuracion/empresas',     icon: 'domain',           roles: ['ADMIN'] },
-            { label: 'Tasas',         path: '/configuracion/tasas-periodo', icon: 'percent',          roles: ['ADMIN', 'TESORERIA', 'APROBADOR'] },
-            { label: 'Integraciones', path: '/integraciones/estado',        icon: 'settings_ethernet', roles: ['ADMIN'] },
+            { label: 'Empresas',            path: '/configuracion/empresas',     icon: 'domain',            roles: ['ADMIN'] },
+            { label: 'Tasas',               path: '/configuracion/tasas-periodo', icon: 'percent',           roles: ['ADMIN', 'TESORERIA', 'APROBADOR'] },
+            { label: 'Catálogo geográfico', path: '/configuracion/geo',           icon: 'public',            roles: ['ADMIN'] },
+            { label: 'Integraciones',       path: '/integraciones/estado',        icon: 'settings_ethernet', roles: ['ADMIN'] },
           ],
         },
         {
@@ -205,9 +206,10 @@ export class SidebarComponent implements OnInit {
           label: 'Consultas',
           icon: 'manage_search',
           items: [
-            { label: 'Cartera de operaciones',   path: '/dashboard/cartera',     icon: 'hub',        roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'] },
-            { label: 'Resumen financiero',        path: '/dashboard/resumen',     icon: 'summarize',  roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'] },
-            { label: 'Indicadores gerenciales',   path: '/dashboard/indicadores', icon: 'leaderboard', roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'] },
+            { label: 'Cartera de operaciones',   path: '/dashboard/cartera',              icon: 'hub',             roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'] },
+            { label: 'Resumen financiero',        path: '/dashboard/resumen',              icon: 'summarize',       roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'] },
+            { label: 'Indicadores gerenciales',   path: '/dashboard/indicadores',          icon: 'leaderboard',     roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'] },
+            { label: 'Cuentas bancarias',         path: '/consultas/cuentas-bancarias',    icon: 'account_balance', roles: ['ADMIN', 'TESORERIA', 'APROBADOR', 'CONTABILIDAD', 'CONSULTA'] },
           ],
         },
         {

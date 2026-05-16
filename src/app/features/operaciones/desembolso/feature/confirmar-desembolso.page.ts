@@ -10,6 +10,7 @@ import { ButtonComponent } from '@shared/ui/button/button.component';
 import { ConfirmDialogComponent } from '@shared/ui/confirm-dialog/confirm-dialog.component';
 import { Desembolso, GmfResumen } from '../domain/desembolso.model';
 import { Operacion } from '../../domain/operacion.model';
+import { ToastService } from '@shared/services/toast.service';
 
 @Component({
   selector: 'app-confirmar-desembolso',
@@ -186,6 +187,7 @@ export class ConfirmarDesembolsoPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly opSvc = inject(OperacionesService);
   private readonly svc   = inject(DesembolsoService);
+  private readonly toast = inject(ToastService);
 
   operacionId = 0;
   operacion   = signal<Operacion | null>(null);
@@ -232,9 +234,11 @@ export class ConfirmarDesembolsoPage implements OnInit {
     this.error.set(null);
 
     this.svc.confirmar(this.operacionId, { monto: this.monto, fecha: this.fecha }).subscribe({
-      next: res => { this.resultado.set(res); this.saving.set(false); },
+      next: res => { this.resultado.set(res); this.saving.set(false); this.toast.success('Desembolso confirmado exitosamente'); },
       error: err => {
-        this.error.set(err?.error?.message ?? 'Error al confirmar el desembolso');
+        const msg = err?.error?.message ?? 'Error al confirmar el desembolso';
+        this.error.set(msg);
+        this.toast.error(msg);
         this.saving.set(false);
       },
     });

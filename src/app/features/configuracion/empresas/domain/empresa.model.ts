@@ -38,12 +38,14 @@ export interface TasaEspecial {
 }
 
 export interface Empresa {
+  observaciones?: string | null;
   id: number;
   codigoInterno: string;
   razonSocial: string;
   nit: string;
   pais: string;
   ciudad: string | null;
+  departamento: string | null;
   rolPermitido: string;
   estado: string;
   representanteLegalNombre: string | null;
@@ -69,6 +71,11 @@ export interface Empresa {
   tasasEspeciales: TasaEspecial[];
 }
 
+export interface Banco {
+  codigo: string;
+  nombre: string;
+}
+
 export interface PagedResponse<T> {
   content: T[];
   totalElements: number;
@@ -83,6 +90,7 @@ export interface CrearEmpresaRequest {
   nit: string;
   pais?: string;
   ciudad?: string;
+  departamento?: string;
   rolPermitido: string;
   representanteLegalNombre?: string;
   representanteLegalEmail?: string;
@@ -99,6 +107,9 @@ export interface CrearEmpresaRequest {
   aplicaTasaEspecial?: boolean;
   retencionFuentePorcentaje?: string;
   retencionIcaPorcentaje?: string;
+  estado?: string;
+  observaciones?: string;
+  cuentasBancarias?: CuentaBancariaRequest[];
 }
 
 export interface CuentaBancariaRequest {

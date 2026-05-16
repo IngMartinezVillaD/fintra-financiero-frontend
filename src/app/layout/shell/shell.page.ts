@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { AlertaBloqueoComponent } from '../../features/configuracion/tasas-periodo/ui/alerta-bloqueo.component';
+import { ToastComponent } from '../../shared/ui/toast/toast.component';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, NavbarComponent, AlertaBloqueoComponent],
+  imports: [RouterOutlet, SidebarComponent, NavbarComponent, AlertaBloqueoComponent, ToastComponent],
   template: `
     <div class="flex h-screen bg-neutral-50 overflow-hidden">
       <app-sidebar />
@@ -19,6 +20,7 @@ import { AlertaBloqueoComponent } from '../../features/configuracion/tasas-perio
         </main>
       </div>
     </div>
+    <app-toast />
   `,
 })
 export class ShellPage {}

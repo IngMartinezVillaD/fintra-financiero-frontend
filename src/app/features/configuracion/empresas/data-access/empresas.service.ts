@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import {
-  CrearEmpresaRequest, CuentaBancariaRequest, CuentaBancaria,
+  Banco, CrearEmpresaRequest, CuentaBancariaRequest, CuentaBancaria,
   Empresa, EmpresaListItem, PagedResponse, TasaEspecial, TasaEspecialRequest
 } from '../domain/empresa.model';
 
@@ -13,6 +13,11 @@ interface ApiResponse<T> { code: number; message: string; data: T; }
 export class EmpresasService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.apiBaseUrl}/empresas`;
+
+  listarBancos(): Observable<Banco[]> {
+    return this.http.get<ApiResponse<Banco[]>>(`${this.base}/bancos`)
+      .pipe(map(r => r.data));
+  }
 
   listar(filtros: { estado?: string; rolPermitido?: string; busqueda?: string; page?: number; size?: number }): Observable<PagedResponse<EmpresaListItem>> {
     let params = new HttpParams()
